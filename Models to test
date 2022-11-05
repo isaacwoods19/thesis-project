@@ -1,0 +1,11 @@
+Dataset: Mirror Worlds Challenge (https://www2.icat.vt.edu/mirrorworlds/challenge/index.html) 
+    and five other datasets (vip.bu.edu/projects/vsns/cossy/fisheye)
+
+Models:
+https://github.com/mikel-brostrom/Yolov5_StrongSORT_OSNet
+https://github.com/duanzhiihao/RAPiD
+
+fisheye people-counting algorithm based on YOLOv3
+YOLOV5
+RAPID 
+Fish-eye Yolov3 (could be same as previous model)
