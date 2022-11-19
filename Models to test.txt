@@ -1,0 +1,46 @@
+Datasets:
+    - Mirror Worlds Challenge (https://www2.icat.vt.edu/mirrorworlds/challenge/index.html)
+    - HABBOF (https://vip.bu.edu/projects/vsns/cossy/datasets/habbof/)
+    - CEPDOF (https://vip.bu.edu/projects/vsns/cossy/datasets/cepdof/) - more frames and human objects, and more challenges like crowds (could be best for tracking too)
+    - WEPDTOF (https://vip.bu.edu/projects/vsns/cossy/datasets/wepdtof/)
+    - FRIDA (https://vip.bu.edu/projects/vsns/cossy/datasets/frida/)
+
+Models:
+
+RAPiD - https://github.com/duanzhiihao/RAPiD & https://vip.bu.edu/projects/vsns/cossy/fisheye/rapid/
+    - Managed to get example model to run on CPU using pretrained weights for Mirrorworlds dataset
+            After a lot of experimenting and fiddling I managed to get it to run on my GPU as well using CUDA.
+    - Is highly accurate at most people in the close vicinity (>90%), but fails to pick up people at the very edge of the camera's range due to confidence threshold limits
+            (it can detect them at accuracies of less than 10%)
+    - Currently unsure how to run this model on a video instead of an image
+
+YOLOv5 - https://github.com/ultralytics/yolov5
+    - Much faster
+    - Focuses on using COCO dataset instead of fisheye images
+    - Bounding boxes are not rotating
+
+RAPiD-T - https://github.com/ozantezcan/RAPiD-T/tree/master  (Looks to be a potentially dead repo used just for development - can harvest model details)
+    - Looks like an enhanced version of RAPiD which would be fantastic
+    - 
+
+https://github.com/mikel-brostrom/Yolov5_StrongSORT_OSNet - Looks like an extension of YOLOv5 that helps with tracking
+
+fisheye people-counting algorithm based on YOLOv3 - https://vip.bu.edu/projects/vsns/cossy/fisheye/li-et-al/
+
+
+
+
+
+
+#########################
+Look now into the tracking models, not just detection models
+
+Look into pre existing models with their trained weights and see how good they are
+
+Also look into training these models on fish eye datasets to see if they improve
+
+Find data that suits context of bus/train carraiges better
+
+Look into comparing all the above things when the fisheeye image is defisheyed (made square)
+
+Put findings into formal doc
