@@ -16,11 +16,12 @@ max_depth = 1700  # maximum depth threshold in millimeters
 # Define ROI dimensions - effectively crops the depth image
 roi_x = 40  # X-coordinate of top-left corner of ROI
 roi_y = 40  # Y-coordinate of top-left corner of ROI
-roi_width = 500  # Width of ROI
-roi_height = 350  # Height of ROI
+roi_width = 500  # Width of ROI - set to 1000 if 1280x720
+roi_height = 350  # Height of ROI - set to 500 if 1280x720
 
 # Define line of interest
-line = [(250, 0), (250, 350)]
+line = [(250, 0), (250, 350)] # line for 640x480
+#line = [(500, 0), (500, 700)]  # line for 1280x720
 
 # Create OpenCV window
 cv2.namedWindow("Person Detection", cv2.WINDOW_NORMAL)
@@ -51,11 +52,10 @@ while True:
     depth_filtered = np.where(depth_mask, depth_image, 0)
 
     # Convert depth filtered image to 8-bit uint8 format
-    depth_filtered_uint8 = cv2.convertScaleAbs(depth_filtered, alpha=0.3)
+    depth_filtered_uint8 = cv2.convertScaleAbs(depth_filtered, alpha=0.09)
 
     # apply ROI to depth image to ignore image edges
     depth_filtered_uint8 = depth_filtered_uint8[roi_y : roi_y + roi_height, roi_x : roi_x + roi_width]
-    colour_image = colour_image[roi_y : roi_y + roi_height, roi_x : roi_x + roi_width]
 
     # Find contours in the depth filtered image
     contours, hierarchy = cv2.findContours(
@@ -72,7 +72,7 @@ while True:
             person_depth = (np.median(depth_frame.get_distance(x + int(w / 2), y + h - 1))) * 1000
 
             # Filter person contours based on depth and size
-            if person_depth > min_depth and person_depth < max_depth and h > 70:
+            if person_depth > min_depth and person_depth < max_depth and h > 100:
 
                 # Calculate centroid of the contour
                 centroid_x = int(x + w / 2)
@@ -134,6 +134,7 @@ while True:
     # Display depth filtered image with detected persons
     cv2.imshow("Person Detection", depth_filtered_uint8)
     cv2.imshow("Colour Image", colour_image)
+    #cv2.imshow("original Depth Image", cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.09), cv2.COLORMAP_JET))
 
     # Exit loop if 'q' key is pressed
     if cv2.waitKey(1) & 0xFF == ord("q"):
