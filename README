@@ -51,16 +51,9 @@ Models:
 
 
 ######## TODO ########
-
-    - Increase dataset variation for fine-tuning YOLOv5s model
-    
-    - Play with different trackers and reID weights when testing the finetuned model
-        - Look into if it is possible to retrain the reID weights
-
-    - Look into RAPiD-T
-
-    - Finish up fish eye stuff
-        - move onto static cameras
+    - formalise each section of this project
+    - update the main project structure to include depth cam stuff and doorframe stuff
+    - try to get it all up on github
 
 ################
 
@@ -73,9 +66,16 @@ Models:
         odtk train retinanet_rn50fpn.pth --backbone ResNet50FPN --lr 0.00005 --classes 1 --augment-brightness 0.01 --augment-contrast 0.01 --augment-hue 0.002 --augment-saturation 0.01 --images ../datasets/images/exhibition_setup/ --annotations ../datasets/annotations/exhibition_setup.json --rotated-bbox
 
     - TRAINING YOLOv5 ON CUSTOM DATASETS
-        python yolov5/train.py --img 640 --batch 16 --epochs 10 --data dataset/data.yaml --weights yolov5s.pt
+        python3 yolov5/train.py --img 640 --batch 16 --epochs 10 --data dataset/data.yaml --weights yolov5s.pt
 
     - TRACKING WITH YOLOv5 ON SELECTED YOUTUBE VIDEO
-        python track.py --tracking-method bytetrack --source 'https://www.youtube.com/watch?v=qBl1tPwyJ2w&list=PLKjRNrBNA-nzzv4KqqdeMHMtq26kue5ZR&index=5' --yolo-weights weights/yolov5s.pt --classes 0 --reid-weights osnet_x0_25_market1501.pt
+        python3 track.py --tracking-method bytetrack --source 'https://www.youtube.com/watch?v=qBl1tPwyJ2w&list=PLKjRNrBNA-nzzv4KqqdeMHMtq26kue5ZR&index=5' --yolo-weights weights/yolov5s.pt --classes 0 --reid-weights osnet_x0_25_market1501.pt
+
+    
+    - COMMAND FOR TRACKING ON VIDEO FROM BEDROOM
+    python3 track.py --tracking-method strongsort --source Dataset/bedroom/bedroom_2_480.mp4 --yolo-weights tuned_models/bus_heads_30epochs/weights/best.pt --conf 0.7 --classes 0 --show-vid --reid-weights osnet_x0_25_market1501.pt
+
+    - COMMAND FOR TRAINING YOLOV5 MODEL
+    python3 yolov5/train.py --img 640 --batch-size -1 --epochs 5 --data Dataset/top_down_dataset/data.yaml --weights yolov5s.pt
 
 ################
