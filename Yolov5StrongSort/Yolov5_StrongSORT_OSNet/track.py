@@ -122,7 +122,7 @@ def run(
     outputs = [None] * nr_sources
 
     prev_boxes = {}
-    line = [(240, 0), (240, 400)]
+    line = [(425, 0), (425, 800)]
     count = 0
 
     # Run tracking
@@ -177,6 +177,7 @@ def run(
 
             annotator = Annotator(im0, line_width=line_thickness, pil=not ascii)
             annotator.text((10,25), text="Count: {}".format(count))
+            annotator.line(line[0], line[1])
             
             if hasattr(tracker_list[i], 'tracker') and hasattr(tracker_list[i].tracker, 'camera_update'):
                 if prev_frames[i] is not None and curr_frames[i] is not None:  # camera motion compensation

@@ -120,9 +120,10 @@ class Annotator:
     def circle(self, xy):
         cv2.circle(self.im, xy, 3, (0,255,0), 2)
 
+    def line(self, start, end):
+        cv2.line(self.im, start, end, (0, 0, 255), 2)
+
     def text(self, xy, text, txt_color=(255, 0, 0), anchor='top'):
-        line = [(425, 0), (425, 800)]
-        cv2.line(self.im, line[0], line[1], (0, 0, 255), 2)
         # Add text to image (PIL-only)
         if anchor == 'bottom':  # start y from font bottom
             w, h = self.font.getsize(text)  # text width, height
