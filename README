@@ -1,3 +1,84 @@
+Datasets:
+    - Mirror Worlds Challenge (https://www2.icat.vt.edu/mirrorworlds/challenge/index.html)
+    - HABBOF (https://vip.bu.edu/projects/vsns/cossy/datasets/habbof/)
+    - CEPDOF (https://vip.bu.edu/projects/vsns/cossy/datasets/cepdof/) - more frames and human objects, and more challenges like crowds (could be best for tracking too)
+    - WEPDTOF (https://vip.bu.edu/projects/vsns/cossy/datasets/wepdtof/)
+    - FRIDA (https://vip.bu.edu/projects/vsns/cossy/datasets/frida/)
+
+Models:
+
+#### DETECTION ONLY ####
+
+    RAPiD - https://github.com/duanzhiihao/RAPiD & https://vip.bu.edu/projects/vsns/cossy/fisheye/rapid/
+        - Managed to get example model to run on CPU using pretrained weights for Mirrorworlds dataset
+                After a lot of experimenting and fiddling I managed to get it to run on my GPU as well using CUDA.
+        - Is highly accurate at most people in the close vicinity (>90%), but fails to pick up people at the very edge of the camera's range due to confidence threshold limits
+                (it can detect them at accuracies of less than 10%)
+        - Currently unsure how to run this model on a video instead of an image
+
+    YOLOv5 - https://github.com/ultralytics/yolov5
+        - Much faster
+        - Focuses on using COCO dataset instead of fisheye images
+        - Bounding boxes are not rotating
+
+    YOLOv5 with rotated bounding boxes - https://github.com/hukaixuan19970627/yolov5_obb
+        - Uses weird format of listing each vertice with xi,yi... instead of x,y,w,h,degree
+
+########
+
+#### WITH TRACKING ####
+
+    RAPiD-T - https://github.com/ozantezcan/RAPiD-T/tree/master  (Looks to be a potentially dead repo used just for development - can harvest model details)
+        - Looks like an enhanced version of RAPiD which would be fantastic
+        - 
+
+    YOLOv5_StrongSORT - https://github.com/mikel-brostrom/Yolov5_StrongSORT_OSNet 
+        - Tested on youtube videos of Mirror Worlds data
+            - The initial detection from YOLOv5 struggles with people that appear upside down due to being trained on COCO
+            - Therefore the Strongsort tracking sometimes counts these upside down people as different people as the detection drops in and out
+            - Adding osnet ReID helped improve this massively, but YOLO still struggles with upside down people
+            - Strongsort was much better than ocsort but took a bit longer to process. Bytetrack seemed the best taking the least time and providing the best results
+                - python track.py --tracking-method bytetrack --source 'https://www.youtube.com/watch?v=qBl1tPwyJ2w&list=PLKjRNrBNA-nzzv4KqqdeMHMtq26kue5ZR&index=5' --classes 0 --reid-weights osnet_x0_25_market1501.pt
+            - YOLOv5m seemed more accurate but slower, YOLOv5s seemed much faster but would lose detection more often. YOLOv5l had the best results but took a little longer per frame
+                - Need to try training these models on fish eye data for higher accuracy so we might be able to use smaller models
+
+            - Trained a YOLOv5s model on convenience_store images for 10 epochs
+                - made model better at detecting people, but the reID failed more and so counted them as different people
+                - Further experiments with different trackers and weights will be done, then more model fine tuning
+                - Maybe look if we can use weights from RAPiD in this tracking situation?
+
+########
+
+
+######## TODO ########
+    - formalise each section of this project
+    - update the main project structure to include depth cam stuff and doorframe stuff
+    - try to get it all up on github
+
+################
+
+
+######## USEFUL COMMANDS ########
+
+    - TRAINING FRESH MODEL FROM SCRATCH ON POSSIBLY ROTATED BBOXES WITH NVIDIA ODTK
+        nvidia-docker run --name ai-container --gpus all --rm --ipc=host -v "/$(pwd)/retinanet-examples/Datasets:/datasets" -it odtk:latest
+
+        odtk train retinanet_rn50fpn.pth --backbone ResNet50FPN --lr 0.00005 --classes 1 --augment-brightness 0.01 --augment-contrast 0.01 --augment-hue 0.002 --augment-saturation 0.01 --images ../datasets/images/exhibition_setup/ --annotations ../datasets/annotations/exhibition_setup.json --rotated-bbox
+
+    - TRAINING YOLOv5 ON CUSTOM DATASETS
+        python3 yolov5/train.py --img 640 --batch 16 --epochs 10 --data dataset/data.yaml --weights yolov5s.pt
+
+    - TRACKING WITH YOLOv5 ON SELECTED YOUTUBE VIDEO
+        python3 track.py --tracking-method bytetrack --source 'https://www.youtube.com/watch?v=qBl1tPwyJ2w&list=PLKjRNrBNA-nzzv4KqqdeMHMtq26kue5ZR&index=5' --yolo-weights weights/yolov5s.pt --classes 0 --reid-weights osnet_x0_25_market1501.pt
+
+    
+    - COMMAND FOR TRACKING ON VIDEO FROM BEDROOM
+    python3 track.py --tracking-method strongsort --source Dataset/bedroom/bedroom_2_480.mp4 --yolo-weights tuned_models/bus_heads_30epochs/weights/best.pt --conf 0.7 --classes 0 --show-vid --reid-weights osnet_x0_25_market1501.pt
+
+    - COMMAND FOR TRAINING YOLOV5 MODEL
+    python3 yolov5/train.py --img 640 --batch-size -1 --epochs 5 --data Dataset/top_down_dataset/data.yaml --weights yolov5s.pt
+
+################
 This repository holds all research and code for my thesis project.
 
 The main branch is used to display the code in a simplified way, and the preprod branch is used to actually run the code.
