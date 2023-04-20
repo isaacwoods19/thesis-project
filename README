@@ -79,3 +79,6 @@ Models:
     python3 yolov5/train.py --img 640 --batch-size -1 --epochs 5 --data Dataset/top_down_dataset/data.yaml --weights yolov5s.pt
 
 ################
+This repository holds all research and code for my thesis project.
+
+The main branch is used to display the code in a simplified way, and the preprod branch is used to actually run the code.
