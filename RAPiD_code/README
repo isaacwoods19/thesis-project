@@ -1,0 +1,13 @@
+This section holds the code from the github repository at https://github.com/duanzhiihao/RAPiD
+RAPiD stands for Rotation-Aware People Detection in Overhead Fisheye Images.
+
+This code is the official PyTorch implementation of the following project and paper: http://vip.bu.edu/projects/vsns/cossy/fisheye/rapid/
+
+The code applies a variation of YOLOv3 detection model on fisheye images using rotated bounding boxes instead of aligned ones. These rotated bounding boxes allow for greater accuracies in detecting objects in fisheye images.
+The folder includes the coco api, which is used for the evaluation of the model, and for some pretraining too.
+
+My experiments found that the model performed well, but accuracy would drop off significantly the closer the subject gets to the edge of the image due to extreme distortion. This is a known issue with fisheye images, and is not unique to this model. The model is still able to detect objects in the image, but the confidences will be lower and more prone to dropping out.
+
+I also found that training a model on rotating bounding boxes is incredibly difficult, due to the fact that almost all datasets publicly available have aligned bounding boxes instead of rotated ones.
+
+I decided to try more conventional, non rotated bounding boxes, with other solutions to experiment further with fish eye images.
