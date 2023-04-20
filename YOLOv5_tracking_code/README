@@ -1,0 +1,13 @@
+This section holds the code from https://github.com/mikel-brostrom/yolov8_tracking before the original author moved to using YOLOv8.
+
+This code uses the publicly available YOLOv5 (You Only Look Once version 5) detection model (https://github.com/ultralytics/yolov5) and applies the ability for it to track the objects that it detects. It can applie a variety of different tracking algorithms, including StrongSort, Bytetrack, and OCsort.
+
+For my work, I applied this model and its trackers to fish eye images. I found that it performed much better than the code from RAPiD, and I weas able to change more of the hyperparameters to get better results. This model also makes use of standard aligned bounding boxes, which allowed for me to train the model further on my own, manually annotated dataset.
+
+After lots of experiments with training and using different hyperparameters, i came to the conclusion that no matter how accurate i get the model, it will always have issues with occlusion, distortion, and detecting multiple people at once. In order to keep an accurate count of the number of people that are in the room, the model has to maintain a very high accuracy at all times or else the count would be inaccurate.
+
+Because of this, I decided it may be best to move away from using fish eye images to count people in a room, and instead look to use another method.
+
+For my second method, I investigated having conventional cameras above each doorway of a room, and use this same detection model and tracking to detect and count people looking from above. Instead of maintaining a detection, this solution has to instead detect a person and manipulate the counter if they pass over a set line. Once this is done, it does not have to detect the person anymore.
+
+This solution worked a lot better than the first as the model doesnt have to work as hard, and I found that once the model was properly trained it performed very well. The only issue here is that it still requires quite a lot of computing power to run well, so another solution was explored (please see my depth_camera_code section).
