@@ -10,6 +10,8 @@ If it does, then this bounding box is tracked and treated like the first box has
 
 It then simply gets the new and old bounding boxes and checks to see if they have passed over a set line in the frame, and manipulates the room count accordingly.
 
+I created this code myself from scratch, using inspiration from other projects for the overall structure.
+
 ### TODO ###
 
 Look at how I can improve the detection quality and reduce drop outs
