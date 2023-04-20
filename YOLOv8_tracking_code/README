@@ -1,0 +1,11 @@
+This section holds the code from https://github.com/mikel-brostrom/yolov8_tracking 
+
+Halfway through the development of this thesis project, a new version of the YOLO detection model was released - version 8.
+This model boasted greatly improved speed and quality while also being smaller and more efficient. Therefore, I decided to retrospectively use this model on some of my previous experiments - both fish eye and top down imagery.
+
+The base code is effectively the same as the other YOLOv5 tracking code, with minor improvements and obviously a different detection model.
+
+When I re-ran some experiments with just the standard pre-trained weights of the YOLOv8 model, I found that it actually performed fantastically on both fisheye imagery and top down imagery. This means that the datasets they used to pre-train these models included data of top down images and fish eye images, and means the model doesnt have to be further trained.
+    - I tried training the model further on some datasets to try and improve it, but actually found worse performance!
+
+This was a fascinating revalation, as it meant that this model could be used 'off-the-shelf' without any additional input from the user. It also meant that it was more of a reasonable solution for our context, as the models are smaller and more efficient, so could be used on smaller embedded systems.
