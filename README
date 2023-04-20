@@ -13,18 +13,23 @@ My project took the form of multiple experiments, and is made of a few main sect
     - Depth camera above doorways without AI
         - Custom written code using Intel Realsense D435i camera
 
-For my project, I was experimenting with and observing multiple solutions to detecting and counting the number of people in an enclosed space - for use in public transport or classrooms.
+For my project, I was experimenting with and observing multiple solutions for detecting and counting the number of people in an enclosed space - for use in public transport or classrooms.
 For each solution, I came to different opinions on how suitable it would be, and what the major pros or cons are for it.
 
-For more details on each solution or experiments, please go to their respective folders.
-
+For more details on each solution or experiment, please go to their respective folders in this repository.
 
 Regarding datasets, I tested multiple options for training and testing models, mostly for the fisheye related data as that was harder to find:
+    Fisheye:
     - Mirror Worlds Challenge (https://www2.icat.vt.edu/mirrorworlds/challenge/index.html)
     - HABBOF (https://vip.bu.edu/projects/vsns/cossy/datasets/habbof/)
     - CEPDOF (https://vip.bu.edu/projects/vsns/cossy/datasets/cepdof/) - more frames and human objects, and more challenges like crowds (could be best for tracking too)
     - WEPDTOF (https://vip.bu.edu/projects/vsns/cossy/datasets/wepdtof/)
     - FRIDA (https://vip.bu.edu/projects/vsns/cossy/datasets/frida/)
+    Topdown:
+    - TVPR (https://vrai.dii.univpm.it/re-id-dataset) and (https://www.youtube.com/watch?v=ReKpjZDRjiE)
+    - person_topv2 (https://universe.roboflow.com/otavio-souza-wq69t/person_topv2)
+    - head-detection-nej1a (https://universe.roboflow.com/head-znpny/head-detection-nej1a)
+    - human-head-detection (https://universe.roboflow.com/pavel-vasiliev/human-head-detection)
 
 Below are the different models I used or researched and their respective sources:
     RAPiD - https://github.com/duanzhiihao/RAPiD & https://vip.bu.edu/projects/vsns/cossy/fisheye/rapid/
