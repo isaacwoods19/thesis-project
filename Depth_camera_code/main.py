@@ -5,26 +5,50 @@ import pyrealsense2 as rs
 # Initialize RealSense pipeline
 pipeline = rs.pipeline()
 config = rs.config()
-config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
+config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 60)
 config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+config.enable_device('846112071410')
+
 pipeline.start(config)
+
+# Create a hole filling filter with 'nearest' mode
+hole_filling_filter = rs.hole_filling_filter(2)
+
+# Get the depth sensor
+sensor = pipeline.get_active_profile().get_device().query_sensors()[0]
+
+# Find all possible visual presets
+preset_range = sensor.get_option_range(rs.option.visual_preset)
+
+# Select preset from list: Available presets: [Default, Hand, High Accuracy, High Density, Medium Density]
+preset = 'High Density'
+
+for i in range(int(preset_range.min), int(preset_range.max + 1)):
+    description = sensor.get_option_value_description(rs.option.visual_preset, i)
+    if description == preset:
+        sensor.set_option(rs.option.visual_preset, i)
+        break
 
 # Depth threshold values (in millimeters) - the depth we are interested in away from the camera
 min_depth = 100  # minimum depth threshold in millimeters
-max_depth = 1700  # maximum depth threshold in millimeters
+max_depth = 1650  # maximum depth threshold in millimeters
 
 # Define ROI dimensions - effectively crops the depth image
 roi_x = 40  # X-coordinate of top-left corner of ROI
-roi_y = 40  # Y-coordinate of top-left corner of ROI
-roi_width = 500  # Width of ROI - set to 1000 if 1280x720
-roi_height = 350  # Height of ROI - set to 500 if 1280x720
+roi_y = 50  # Y-coordinate of top-left corner of ROI
+roi_width = 520  # Width of ROI - set to 1000 if 1280x720, 520 if not
+roi_height = 350  # Height of ROI - set to 500 if 1280x720, 350 if not
 
 # Define line of interest
 line = [(250, 0), (250, 350)] # line for 640x480
 #line = [(500, 0), (500, 700)]  # line for 1280x720
 
-# Create OpenCV window
-cv2.namedWindow("Person Detection", cv2.WINDOW_NORMAL)
+# Create OpenCV windows
+cv2.namedWindow("Person Detection", cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow("Colour Image", cv2.WINDOW_AUTOSIZE)
+# move windows to specified positions
+cv2.moveWindow('Person Detection', 200, 100)
+cv2.moveWindow('Colour Image', 800, 100)
 
 # Create a dictionary to store object trackers using centroid tracking
 object_trackers = {}
@@ -38,6 +62,9 @@ while True:
     colour_frame = frames.get_color_frame()
     if not depth_frame or not colour_frame:
         continue
+
+    # Apply hole filling to the depth frame
+    depth_frame = hole_filling_filter.process(depth_frame)
 
     # Convert depth frame to numpy array
     depth_image = np.asanyarray(depth_frame.get_data())
@@ -69,7 +96,7 @@ while True:
             x, y, w, h = cv2.boundingRect(contour)
 
             # Estimate height of object using depth information
-            person_depth = (np.median(depth_frame.get_distance(x + int(w / 2), y + h - 1))) * 1000
+            person_depth = (np.median(depth_frame.as_depth_frame().get_distance(x + int(w / 2), y + h - 1))) * 1000
 
             # Filter person contours based on depth and size
             if person_depth > min_depth and person_depth < max_depth and h > 100:
@@ -134,7 +161,6 @@ while True:
     # Display depth filtered image with detected persons
     cv2.imshow("Person Detection", depth_filtered_uint8)
     cv2.imshow("Colour Image", colour_image)
-    #cv2.imshow("original Depth Image", cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.09), cv2.COLORMAP_JET))
 
     # Exit loop if 'q' key is pressed
     if cv2.waitKey(1) & 0xFF == ord("q"):
