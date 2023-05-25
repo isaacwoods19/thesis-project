@@ -60,11 +60,6 @@ Models:
 
 ######## USEFUL COMMANDS ########
 
-    - TRAINING FRESH MODEL FROM SCRATCH ON POSSIBLY ROTATED BBOXES WITH NVIDIA ODTK
-        nvidia-docker run --name ai-container --gpus all --rm --ipc=host -v "/$(pwd)/retinanet-examples/Datasets:/datasets" -it odtk:latest
-
-        odtk train retinanet_rn50fpn.pth --backbone ResNet50FPN --lr 0.00005 --classes 1 --augment-brightness 0.01 --augment-contrast 0.01 --augment-hue 0.002 --augment-saturation 0.01 --images ../datasets/images/exhibition_setup/ --annotations ../datasets/annotations/exhibition_setup.json --rotated-bbox
-
     - TRAINING YOLOv5 ON CUSTOM DATASETS
         python3 yolov5/train.py --img 640 --batch 16 --epochs 10 --data dataset/data.yaml --weights yolov5s.pt
 

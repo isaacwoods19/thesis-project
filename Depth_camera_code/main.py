@@ -84,7 +84,7 @@ while True:
     # apply ROI to depth image to ignore image edges
     depth_filtered_uint8 = depth_filtered_uint8[roi_y : roi_y + roi_height, roi_x : roi_x + roi_width]
 
-    # Find contours in the depth filtered image
+    # Find the bounding box information of all shapes in the depth filtered image
     contours, hierarchy = cv2.findContours(
         depth_filtered_uint8, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
     )
